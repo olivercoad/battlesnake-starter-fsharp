@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net5.0</TargetFramework>
+    <RootNamespace>BattlesnakeStarterFSharp</RootNamespace>
+    <WarnOn>3390;$(WarnOn)</WarnOn>
+    <DisableImplicitFSharpCoreReference>true</DisableImplicitFSharpCoreReference>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="BattlesnakeApi.fs" />
+    <Compile Include="Battlesnake.fs" />
+    <Compile Include="Program.fs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="giraffe" Version="5.0.0" />
+    <PackageReference Include="newtonsoft.json" Version="13.0.1" />
+    <PackageReference Include="Thoth.JSON.Giraffe" Version="5.0.0" />
+    <PackageReference Include="FSharp.Core" Version="5.0.2" />
+  </ItemGroup>
+</Project>

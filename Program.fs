@@ -1,16 +1,15 @@
-open System
 open Microsoft.AspNetCore.Builder
 open Microsoft.AspNetCore.Hosting
 open Microsoft.Extensions.Hosting
 open Microsoft.Extensions.DependencyInjection
 open Giraffe
-open Battlesnake
 
 let webapp : HttpHandler =
-    choose [ route "/" >=> json (info ())
-             route "/start" >=> bindJson (fun gs -> startGame gs; text "Game started")
-             route "/end" >=> bindJson (fun gs -> endGame gs; text "Game ended")
-             route "/move" >=> bindJson (move >> json)
+    let s = Battlesnake.server
+    choose [ route "/" >=> json (s.Info ()) // evaluated once on startup. use Giraffe warbler if not static
+             route "/start" >=> bindJson (fun gameState -> s.StartGame gameState; text "Game started")
+             route "/end" >=> bindJson (fun gameState -> s.EndGame gameState; text "Game ended")
+             route "/move" >=> bindJson (s.Move >> json) // parse gameState from json and encode response as json
     ]
 
 let configureApp (app: IApplicationBuilder) =
@@ -24,6 +23,7 @@ let configureServices (services: IServiceCollection) =
     // Use Thoth for the json (de)serialization
     let thothSerializer = 
         Thoth.Json.Giraffe.ThothSerializer(Thoth.Json.Net.CaseStrategy.CamelCase)
+    // would've been better if it was CaseStrategy.SnakeCase...
     services.AddSingleton<Json.ISerializer>(thothSerializer) |> ignore
 
 [<EntryPoint>]
